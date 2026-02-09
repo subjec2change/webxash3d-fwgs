@@ -4,8 +4,10 @@ RUN npm install -g pnpm
 
 WORKDIR /client
 
-COPY docker/hl-web-server/wasm/package.json package.json
-COPY docker/hl-web-server/wasm/pnpm-lock.yaml pnpm-lock.yaml
+COPY docker/hl-web-server/wasm/package.json docker/hl-web-server/wasm/package.json
+COPY package.json package.json
+COPY pnpm-lock.yaml pnpm-lock.yaml
+COPY pnpm-workspace.yaml pnpm-workspace.yaml
 RUN pnpm install --frozen-lockfile
 
 FROM yohimik/cs-web-server:latest
@@ -15,9 +17,9 @@ RUN rm -rf /xashds/cstrike
 RUN rm -rf /xashds/public/cstrike
 USER xashds
 
-COPY --from=wasm /client/node_modules/hlsdk-portable/dist/valve/ ./public/valve
-COPY --from=wasm /client/node_modules/xash3d-fwgs/dist/valve/ ./public/valve
-COPY --from=wasm /client/node_modules/xash3d-fwgs/dist/libmenu.wasm ./public/valve/libmenu.wasm
+COPY --from=wasm /client/docker/hl-web-server/wasm/node_modules/hlsdk-portable/dist/valve/ ./public/valve
+COPY --from=wasm /client/docker/hl-web-server/wasm/node_modules/xash3d-fwgs/dist/valve/ ./public/valve
+COPY --from=wasm /client/docker/hl-web-server/wasm/node_modules/xash3d-fwgs/dist/libmenu.wasm ./public/valve/libmenu.wasm
 
 # Engine configuration
 ENV GAME_DIR="valve"

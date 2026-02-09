@@ -36,14 +36,23 @@ importers:
         specifier: 7.1.11
         version: 7.1.11(@types/node@24.9.1)(jiti@1.21.7)(terser@5.44.0)(yaml@2.8.1)
       xash3d-fwgs:
-        specifier: workspace:1.2.2
-        version: link:../../packages/xash3d-fwgs
+        specifier: 1.2.2
+        version: 1.2.2
 
   docker/cs-web-server-metpamx:
     dependencies:
       cs-web-server:
         specifier: workspace:0.1.1
         version: link:../cs-web-server
+
+  docker/cs-web-server/wasm:
+    dependencies:
+      cs16-client:
+        specifier: 0.1.2
+        version: 0.1.2
+      xash3d-fwgs:
+        specifier: 1.2.2
+        version: 1.2.2
 
   docker/hl-web-server:
     dependencies:
@@ -59,6 +68,15 @@ importers:
       cs-web-server-metpamx:
         specifier: workspace:0.1.1
         version: link:../cs-web-server-metpamx
+
+  docker/hl-web-server/wasm:
+    dependencies:
+      hlsdk-portable:
+        specifier: 0.1.2
+        version: 0.1.2
+      xash3d-fwgs:
+        specifier: 1.2.2
+        version: 1.2.2
 
   examples/react-typescript-cs16:
     dependencies:

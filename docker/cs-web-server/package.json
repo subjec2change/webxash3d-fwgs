@@ -1,9 +1,12 @@
 {
   "name": "cs-web-server",
   "version": "0.1.1",
+  "private": true,
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build-docker": "TAG=$(node -p \"require('./package.json').version\") docker compose build",
+    "push-image": "TAG=$(node -p \"require('./package.json').version\") docker compose push",
     "serve": "vite preview"
   },
   "author": "",
@@ -14,6 +17,6 @@
     "jszip": "3.10.1",
     "typescript": "^5.9.3",
     "vite": "7.1.11",
-    "xash3d-fwgs": "workspace:1.2.2"
+    "xash3d-fwgs": "1.2.2"
   }
 }

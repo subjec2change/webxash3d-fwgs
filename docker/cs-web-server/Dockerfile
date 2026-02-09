@@ -74,16 +74,6 @@ WORKDIR /opt/xash/xashds
 COPY docker/cs-web-server/configs/valve valve
 COPY docker/cs-web-server/configs/cstrike cstrike
 
-FROM --platform=linux/amd64 node:22-alpine AS wasm
-
-RUN npm install -g pnpm
-
-WORKDIR /client
-
-COPY docker/cs-web-server/wasm/package.json package.json
-COPY docker/cs-web-server/wasm/pnpm-lock.yaml pnpm-lock.yaml
-RUN pnpm install --frozen-lockfile
-
 FROM --platform=linux/amd64 node:22-alpine AS client
 
 RUN npm install -g pnpm
@@ -91,13 +81,12 @@ RUN npm install -g pnpm
 WORKDIR /client
 
 COPY docker/cs-web-server/package.json docker/cs-web-server/package.json
+COPY docker/cs-web-server/wasm/package.json docker/cs-web-server/wasm/package.json
 COPY package.json package.json
 COPY pnpm-lock.yaml pnpm-lock.yaml
 COPY pnpm-workspace.yaml pnpm-workspace.yaml
 RUN pnpm install --frozen-lockfile
 COPY docker/cs-web-server/vite.config.ts docker/cs-web-server/vite.config.ts
-COPY packages/xash3d-fwgs packages/xash3d-fwgs
-COPY packages/cs16-client packages/cs16-client
 COPY docker/cs-web-server/tsconfig.json docker/cs-web-server/tsconfig.json
 COPY docker/cs-web-server/src/client docker/cs-web-server/src/client
 
@@ -127,8 +116,8 @@ ENV LD_LIBRARY_PATH=/xashds
 COPY --from=hlds /opt/xash/xashds .
 COPY --from=go /go/xash ./xash
 COPY --from=client /client/docker/cs-web-server/src/client/dist ./public
-COPY --from=wasm /client/node_modules/cs16-client/dist/cstrike/ ./public/cstrike
-COPY --from=wasm /client/node_modules/xash3d-fwgs/dist/filesystem_stdio.wasm ./public/filesystem_stdio.wasm
+COPY --from=client /client/docker/cs-web-server/wasm/node_modules/cs16-client/dist/cstrike/ ./public/cstrike
+COPY --from=client /client/docker/cs-web-server/wasm/node_modules/xash3d-fwgs/dist/filesystem_stdio.wasm ./public/filesystem_stdio.wasm
 COPY --from=engine /xash/build/filesystem/filesystem_stdio.so ./filesystem_stdio.so
 COPY --from=engine "/usr/lib/i386-linux-gnu/libstdc++.so.6" "./libstdc++.so.6"
 COPY --from=engine "/usr/lib/i386-linux-gnu/libgcc_s.so.1" "./libgcc_s.so.1"

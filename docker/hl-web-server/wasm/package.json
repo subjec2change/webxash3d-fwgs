@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "hlsdk-portable": "workspace:0.1.2",
-    "xash3d-fwgs": "workspace:1.2.2"
+    "hlsdk-portable": "0.1.2",
+    "xash3d-fwgs": "1.2.2"
   }
 }
