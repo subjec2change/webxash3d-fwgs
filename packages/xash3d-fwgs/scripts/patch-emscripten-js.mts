@@ -29,14 +29,7 @@ async function main() {
     const f = new CompileFile(raw)
 
     // fix CJS export to EJS
-    f.deleteAll('// Export using a UMD style export, or ES6 exports if selected')
-    f.deleteAll('if (typeof exports === \'object\' && typeof module === \'object\') {')
-    f.deleteAll('module.exports = Xash3D;')
-    f.deleteAll('// This default export looks redundant, but it allows TS to import this')
-    f.deleteAll('// commonjs style module.')
-    f.deleteAll('module.exports.default = Xash3D;\n}')
-    f.deleteAll('else if (typeof define === \'function\' && define[\'amd\'])')
-    f.replaceAll(`define([], () => Xash3D);`,
+    f.replaceAll(`if(typeof exports==="object"&&typeof module==="object"){module.exports=Xash3D;module.exports.default=Xash3D}else if(typeof define==="function"&&define["amd"])define([],()=>Xash3D);`,
         'export default Xash3D;')
 
     // add on start async FS callback
@@ -44,7 +37,7 @@ async function main() {
     f.deleteAll(';if(runtimeInitialized){moduleRtn=Module}else{moduleRtn=new Promise((resolve,reject)=>{readyPromiseResolve=resolve;readyPromiseReject=reject})}')
 
     // return engine funcs instead of runtime promise
-    f.replaceAll('return moduleRtn;', `
+    f.replaceAll('return moduleRtn', `
         return {
             Module,
             FS,
